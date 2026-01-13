@@ -12,52 +12,32 @@ type Pokemon = {
 const questions = [
   {
     id: 1,
-    question: "How do you spend your free time?",
+    question: "How do you handle a \"hater\" on Twitter/X?",
     options: [
-      { text: "Relaxing and napping", points: { snorlax: 3, pikachu: 0, charizard: 0, squirtle: 1 } },
-      { text: "Playing and having fun", points: { snorlax: 0, pikachu: 3, charizard: 1, squirtle: 2 } },
-      { text: "Training and competing", points: { snorlax: 0, pikachu: 1, charizard: 3, squirtle: 1 } },
-      { text: "Helping others", points: { snorlax: 1, pikachu: 2, charizard: 0, squirtle: 3 } }
+      { text: "Kill them with kindness and lots of emojis.", points: { pikachu: 3, charizard: 0, squirtle: 1, snorlax: 0 } },
+      { text: "Hit them with a logic-bomb so heavy they delete their account.", points: { pikachu: 0, charizard: 3, squirtle: 2, snorlax: 0 } },
+      { text: "Ignore them. I'm too busy building the future.", points: { pikachu: 0, charizard: 1, squirtle: 3, snorlax: 1 } },
+      { text: "Use their salt to fuel my next 48-hour sprint.", points: { pikachu: 1, charizard: 2, squirtle: 0, snorlax: 3 } }
     ]
   },
   {
     id: 2,
-    question: "What's your approach to challenges?",
+    question: "A heated argument breaks out in the main chat. How do you handle it?",
     options: [
-      { text: "Take it slow and steady", points: { snorlax: 3, pikachu: 0, charizard: 0, squirtle: 2 } },
-      { text: "Jump in with enthusiasm", points: { snorlax: 0, pikachu: 3, charizard: 2, squirtle: 1 } },
-      { text: "Face them head-on with power", points: { snorlax: 0, pikachu: 1, charizard: 3, squirtle: 0 } },
-      { text: "Think strategically first", points: { snorlax: 1, pikachu: 0, charizard: 1, squirtle: 3 } }
+      { text: "I post a perfectly timed meme to defuse the tension.", points: { pikachu: 3, charizard: 0, squirtle: 1, snorlax: 1 } },
+      { text: "I drop a \"Wall of Text\" explaining exactly why both sides are wrong.", points: { pikachu: 0, charizard: 3, squirtle: 2, snorlax: 0 } },
+      { text: "I leave the room. If it isn't about the build, I'm not interested.", points: { pikachu: 0, charizard: 1, squirtle: 3, snorlax: 1 } },
+      { text: "I start a third, even more chaotic argument just to see what happens.", points: { pikachu: 1, charizard: 2, squirtle: 0, snorlax: 3 } }
     ]
   },
   {
     id: 3,
-    question: "How would friends describe you?",
+    question: "What's your ultimate \"special move\" in life?",
     options: [
-      { text: "Calm and easygoing", points: { snorlax: 3, pikachu: 1, charizard: 0, squirtle: 1 } },
-      { text: "Energetic and friendly", points: { snorlax: 0, pikachu: 3, charizard: 1, squirtle: 2 } },
-      { text: "Strong and confident", points: { snorlax: 0, pikachu: 0, charizard: 3, squirtle: 1 } },
-      { text: "Loyal and dependable", points: { snorlax: 1, pikachu: 2, charizard: 1, squirtle: 3 } }
-    ]
-  },
-  {
-    id: 4,
-    question: "What's your ideal environment?",
-    options: [
-      { text: "Cozy and comfortable", points: { snorlax: 3, pikachu: 1, charizard: 0, squirtle: 0 } },
-      { text: "Lively and social", points: { snorlax: 0, pikachu: 3, charizard: 1, squirtle: 2 } },
-      { text: "Exciting and adventurous", points: { snorlax: 0, pikachu: 1, charizard: 3, squirtle: 1 } },
-      { text: "Peaceful near water", points: { snorlax: 1, pikachu: 0, charizard: 0, squirtle: 3 } }
-    ]
-  },
-  {
-    id: 5,
-    question: "What motivates you most?",
-    options: [
-      { text: "Comfort and relaxation", points: { snorlax: 3, pikachu: 0, charizard: 0, squirtle: 1 } },
-      { text: "Making friends happy", points: { snorlax: 0, pikachu: 3, charizard: 0, squirtle: 2 } },
-      { text: "Being the best", points: { snorlax: 0, pikachu: 1, charizard: 3, squirtle: 1 } },
-      { text: "Protecting loved ones", points: { snorlax: 1, pikachu: 2, charizard: 1, squirtle: 3 } }
+      { text: "Extreme Speed: I finish a week's work in two hours.", points: { pikachu: 3, charizard: 2, squirtle: 1, snorlax: 0 } },
+      { text: "Teleport: I'm always exactly where I need to be.", points: { pikachu: 1, charizard: 1, squirtle: 3, snorlax: 0 } },
+      { text: "Rest: I can sleep anywhere, anytime, for any duration.", points: { pikachu: 0, charizard: 0, squirtle: 1, snorlax: 3 } },
+      { text: "Hyper Beam: I give 1000% effort, then I need a long nap.", points: { pikachu: 1, charizard: 3, squirtle: 0, snorlax: 2 } }
     ]
   }
 ];
@@ -129,7 +109,7 @@ export default function PokemonQuiz() {
             Which Pokémon Are You?
           </h1>
           <p className="text-xl text-gray-600 mb-8">
-            Answer 5 questions to discover your Pokémon personality!
+            Answer 3 questions to discover your Pokémon personality!
           </p>
           <button
             onClick={() => setStarted(true)}
@@ -215,4 +195,6 @@ export default function PokemonQuiz() {
     </div>
   );
 }
+
+
 
