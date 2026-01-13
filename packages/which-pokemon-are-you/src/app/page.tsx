@@ -1,84 +1,218 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-const slogans = [
-  "Turn chats into apps",
-  "Prompt. Ship. Repeat.",
-  "Build anything from a chat",
-  "Ideas → Apps, instantly",
-  "From zero to MVP in minutes",
-  "Your cofounder in the command line",
-  "Draft, iterate, deploy",
-  "Ship faster than you can type",
-  "Design in text, deliver in code",
-  "Dream it. Prompt it. Run it.",
-  "Chat-native app building",
-  "From prompt to product",
-  "One prompt, infinite apps",
-  "Stop scaffolding. Start shipping.",
-  "Prototype at the speed of thought",
-  "Make conversations executable"
+type Pokemon = {
+  name: string;
+  description: string;
+  image: string;
+  traits: string[];
+};
+
+const questions = [
+  {
+    id: 1,
+    question: "How do you spend your free time?",
+    options: [
+      { text: "Relaxing and napping", points: { snorlax: 3, pikachu: 0, charizard: 0, squirtle: 1 } },
+      { text: "Playing and having fun", points: { snorlax: 0, pikachu: 3, charizard: 1, squirtle: 2 } },
+      { text: "Training and competing", points: { snorlax: 0, pikachu: 1, charizard: 3, squirtle: 1 } },
+      { text: "Helping others", points: { snorlax: 1, pikachu: 2, charizard: 0, squirtle: 3 } }
+    ]
+  },
+  {
+    id: 2,
+    question: "What's your approach to challenges?",
+    options: [
+      { text: "Take it slow and steady", points: { snorlax: 3, pikachu: 0, charizard: 0, squirtle: 2 } },
+      { text: "Jump in with enthusiasm", points: { snorlax: 0, pikachu: 3, charizard: 2, squirtle: 1 } },
+      { text: "Face them head-on with power", points: { snorlax: 0, pikachu: 1, charizard: 3, squirtle: 0 } },
+      { text: "Think strategically first", points: { snorlax: 1, pikachu: 0, charizard: 1, squirtle: 3 } }
+    ]
+  },
+  {
+    id: 3,
+    question: "How would friends describe you?",
+    options: [
+      { text: "Calm and easygoing", points: { snorlax: 3, pikachu: 1, charizard: 0, squirtle: 1 } },
+      { text: "Energetic and friendly", points: { snorlax: 0, pikachu: 3, charizard: 1, squirtle: 2 } },
+      { text: "Strong and confident", points: { snorlax: 0, pikachu: 0, charizard: 3, squirtle: 1 } },
+      { text: "Loyal and dependable", points: { snorlax: 1, pikachu: 2, charizard: 1, squirtle: 3 } }
+    ]
+  },
+  {
+    id: 4,
+    question: "What's your ideal environment?",
+    options: [
+      { text: "Cozy and comfortable", points: { snorlax: 3, pikachu: 1, charizard: 0, squirtle: 0 } },
+      { text: "Lively and social", points: { snorlax: 0, pikachu: 3, charizard: 1, squirtle: 2 } },
+      { text: "Exciting and adventurous", points: { snorlax: 0, pikachu: 1, charizard: 3, squirtle: 1 } },
+      { text: "Peaceful near water", points: { snorlax: 1, pikachu: 0, charizard: 0, squirtle: 3 } }
+    ]
+  },
+  {
+    id: 5,
+    question: "What motivates you most?",
+    options: [
+      { text: "Comfort and relaxation", points: { snorlax: 3, pikachu: 0, charizard: 0, squirtle: 1 } },
+      { text: "Making friends happy", points: { snorlax: 0, pikachu: 3, charizard: 0, squirtle: 2 } },
+      { text: "Being the best", points: { snorlax: 0, pikachu: 1, charizard: 3, squirtle: 1 } },
+      { text: "Protecting loved ones", points: { snorlax: 1, pikachu: 2, charizard: 1, squirtle: 3 } }
+    ]
+  }
 ];
 
-export default function Landing() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
+const pokemons: Record<string, Pokemon> = {
+  pikachu: {
+    name: "Pikachu",
+    description: "You're energetic, friendly, and always ready for adventure! Your positive attitude is contagious.",
+    image: "⚡",
+    traits: ["Energetic", "Friendly", "Loyal", "Playful"]
+  },
+  charizard: {
+    name: "Charizard",
+    description: "You're strong, confident, and competitive! You love challenges and never back down.",
+    image: "🔥",
+    traits: ["Powerful", "Confident", "Brave", "Competitive"]
+  },
+  squirtle: {
+    name: "Squirtle",
+    description: "You're dependable, strategic, and caring! Friends know they can always count on you.",
+    image: "💧",
+    traits: ["Loyal", "Strategic", "Caring", "Dependable"]
+  },
+  snorlax: {
+    name: "Snorlax",
+    description: "You're calm, easygoing, and love your comfort! You know how to enjoy life's simple pleasures.",
+    image: "😴",
+    traits: ["Calm", "Relaxed", "Content", "Peaceful"]
+  }
+};
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsVisible(false);
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % slogans.length);
-        setIsVisible(true);
-      }, 400);
-    }, 2800);
+export default function PokemonQuiz() {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [scores, setScores] = useState({ snorlax: 0, pikachu: 0, charizard: 0, squirtle: 0 });
+  const [result, setResult] = useState<Pokemon | null>(null);
+  const [started, setStarted] = useState(false);
 
-    return () => clearInterval(interval);
-  }, []);
+  const handleAnswer = (points: Record<string, number>) => {
+    const newScores = {
+      snorlax: scores.snorlax + points.snorlax,
+      pikachu: scores.pikachu + points.pikachu,
+      charizard: scores.charizard + points.charizard,
+      squirtle: scores.squirtle + points.squirtle
+    };
+    setScores(newScores);
+
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else {
+      // Calculate result
+      const winner = Object.entries(newScores).reduce((a, b) => a[1] > b[1] ? a : b)[0];
+      setResult(pokemons[winner]);
+    }
+  };
+
+  const restart = () => {
+    setCurrentQuestion(0);
+    setScores({ snorlax: 0, pikachu: 0, charizard: 0, squirtle: 0 });
+    setResult(null);
+    setStarted(false);
+  };
+
+  if (!started) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 max-w-2xl w-full text-center">
+          <div className="text-8xl mb-6">🎮</div>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            Which Pokémon Are You?
+          </h1>
+          <p className="text-xl text-gray-600 mb-8">
+            Answer 5 questions to discover your Pokémon personality!
+          </p>
+          <button
+            onClick={() => setStarted(true)}
+            className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold text-xl px-12 py-4 rounded-full hover:scale-105 transition-transform shadow-lg"
+          >
+            Start Quiz
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (result) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 max-w-2xl w-full text-center">
+          <div className="text-9xl mb-6">{result.image}</div>
+          <h2 className="text-5xl font-bold text-gray-800 mb-4">
+            You are {result.name}!
+          </h2>
+          <p className="text-xl text-gray-600 mb-6">
+            {result.description}
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            {result.traits.map((trait) => (
+              <span
+                key={trait}
+                className="bg-gradient-to-r from-purple-400 to-pink-400 text-white px-4 py-2 rounded-full font-semibold"
+              >
+                {trait}
+              </span>
+            ))}
+          </div>
+          <button
+            onClick={restart}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-xl px-12 py-4 rounded-full hover:scale-105 transition-transform shadow-lg"
+          >
+            Take Quiz Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const question = questions[currentQuestion];
+  const progress = ((currentQuestion + 1) / questions.length) * 100;
 
   return (
-    <div className="relative h-[100dvh] w-full overflow-hidden bg-black text-white">
-      {/* Enhanced animated aurora background layers */}
-      <div className="absolute inset-0 bg-aurora-layer-1" />
-      <div className="absolute inset-0 bg-aurora-layer-2" />
-      <div className="absolute inset-0 bg-aurora-layer-3" />
-      
-      {/* Floating particles overlay */}
-      <div className="absolute inset-0 bg-particles" />
-      
-      {/* Main content - centered */}
-      <main className="relative z-10 h-full flex flex-col items-center justify-center px-6">
-        <h1 className="text-center text-[clamp(28px,6vw,64px)] font-medium tracking-tight mb-4">
-          Turn Chats into Apps
-        </h1>
-        
-        {/* Rotating slogans */}
-        <div className="mt-4 h-8 md:h-10 overflow-hidden flex items-center justify-center">
-          <span
-            className={`inline-block text-center text-[clamp(18px,3vw,32px)] font-light transition-all duration-[400ms] ease-in-out ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-            }`}
-          >
-            {slogans[currentIndex]}
-          </span>
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 max-w-2xl w-full">
+        {/* Progress bar */}
+        <div className="mb-8">
+          <div className="flex justify-between text-sm text-gray-600 mb-2">
+            <span>Question {currentQuestion + 1} of {questions.length}</span>
+            <span>{Math.round(progress)}%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-3">
+            <div
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
-      </main>
-      
-      {/* Start Prompting arrow pointing left - bottom left */}
-      <div className="absolute left-6 md:left-8 bottom-[5%] z-20 flex items-center gap-3 arrow-point-left">
-        <div className="flex items-center gap-2 text-white/80 font-medium text-sm md:text-base">
-          <svg 
-            className="w-5 h-5 md:w-6 md:h-6 animate-bounce-horizontal" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          <span>Start prompting</span>
+
+        {/* Question */}
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">
+          {question.question}
+        </h2>
+
+        {/* Options */}
+        <div className="space-y-4">
+          {question.options.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => handleAnswer(option.points)}
+              className="w-full bg-gradient-to-r from-purple-100 to-pink-100 hover:from-purple-200 hover:to-pink-200 text-gray-800 font-semibold text-lg px-6 py-4 rounded-xl transition-all hover:scale-102 shadow-md hover:shadow-lg"
+            >
+              {option.text}
+            </button>
+          ))}
         </div>
       </div>
     </div>
   );
 }
+
